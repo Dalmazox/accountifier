@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-package login.v1;
-
-message LoginRequest {
-  string user_id = 1;
-}
