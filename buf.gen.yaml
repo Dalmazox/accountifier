@@ -1,0 +1,12 @@
+version: v2
+clean: true
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: go
+plugins:
+  - remote: buf.build/grpc/go:v1.5.1
+    out: gen
+  - remote: buf.build/protocolbuffers/go:v1.34.2
+    out: gen
