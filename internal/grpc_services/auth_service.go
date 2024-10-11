@@ -12,9 +12,9 @@ type AuthServiceServer struct {
 	loginUseCase *usecases.LoginUseCase
 }
 
-func NewAuthServiceServer() *AuthServiceServer {
+func NewAuthServiceServer(loginUseCase *usecases.LoginUseCase) *AuthServiceServer {
 	return &AuthServiceServer{
-		loginUseCase: usecases.NewLoginUseCase(),
+		loginUseCase: loginUseCase,
 	}
 }
 
