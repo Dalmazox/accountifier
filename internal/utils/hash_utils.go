@@ -7,13 +7,11 @@ import (
 	"time"
 
 	"github.com/dalmazox/accountifier/config"
-	"github.com/dalmazox/accountifier/internal/models"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 type Claims struct {
 	UserUUID string
-	Email    string
 	jwt.RegisteredClaims
 }
 
@@ -29,12 +27,11 @@ type RefreshToken struct {
 	ExpiresAt     time.Time
 }
 
-func GenerateJwt(user models.User, cfg *config.Config) (*TokenJwt, error) {
+func GenerateJwt(userUUID string, cfg *config.Config) (*TokenJwt, error) {
 	expirationTime := time.Now().Add(1 * time.Hour)
 
 	claims := &Claims{
-		UserUUID: user.UUID,
-		Email:    user.Email,
+		UserUUID: userUUID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -51,7 +48,7 @@ func GenerateJwt(user models.User, cfg *config.Config) (*TokenJwt, error) {
 	return &TokenJwt{Token: tokenString, ExpiresAt: expirationTime}, nil
 }
 
-func GenerateRefreshToken(user models.User) (*RefreshToken, error) {
+func GenerateRefreshToken(userUUID string) (*RefreshToken, error) {
 	rawToken := make([]byte, 32)
 	_, err := rand.Read(rawToken)
 	if err != nil {
@@ -59,21 +56,21 @@ func GenerateRefreshToken(user models.User) (*RefreshToken, error) {
 	}
 
 	token := hex.EncodeToString(rawToken)
-	hash := sha256.Sum256([]byte(token))
-	hashedToken := hex.EncodeToString(hash[:])
 	expiresAt := time.Now().Add(7 * 24 * time.Hour)
 
 	return &RefreshToken{
-		HashedToken:   hashedToken,
+		HashedToken:   HashToken(token),
 		OriginalToken: token,
-		UserUUID:      user.UUID,
+		UserUUID:      userUUID,
 		ExpiresAt:     expiresAt,
 	}, nil
 }
 
-func RefreshTokenIsValid(providedToken, stored string) bool {
-	hash := sha256.Sum256([]byte(providedToken))
-	hashedToken := hex.EncodeToString(hash[:])
+func RefreshTokenIsValid(providedToken, storedToken string) bool {
+	return HashToken(providedToken) == storedToken
+}
 
-	return hashedToken == stored
+func HashToken(token string) string {
+	hash := sha256.Sum256([]byte(token))
+	return hex.EncodeToString(hash[:])
 }

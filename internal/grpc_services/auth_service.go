@@ -9,15 +9,21 @@ import (
 
 type AuthServiceServer struct {
 	authv1.UnimplementedAuthServiceServer
-	loginUseCase *usecases.LoginUseCase
+	loginUseCase        *usecases.LoginUseCase
+	refreshTokenUseCase *usecases.RefreshTokenUseCase
 }
 
-func NewAuthServiceServer(loginUseCase *usecases.LoginUseCase) *AuthServiceServer {
+func NewAuthServiceServer(loginUseCase *usecases.LoginUseCase, refreshTokenUseCase *usecases.RefreshTokenUseCase) *AuthServiceServer {
 	return &AuthServiceServer{
-		loginUseCase: loginUseCase,
+		loginUseCase:        loginUseCase,
+		refreshTokenUseCase: refreshTokenUseCase,
 	}
 }
 
 func (server *AuthServiceServer) Login(ctx context.Context, request *authv1.LoginRequest) (*authv1.LoginResponse, error) {
 	return server.loginUseCase.Login(ctx, request)
+}
+
+func (server *AuthServiceServer) RefreshToken(ctx context.Context, request *authv1.RefreshTokenRequest) (*authv1.RefreshTokenResponse, error) {
+	return server.refreshTokenUseCase.RefreshToken(ctx, request)
 }

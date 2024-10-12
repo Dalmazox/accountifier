@@ -3,11 +3,11 @@ CREATE TABLE user_token (
 	user_id uuid NOT NULL,
 	"token" text NOT NULL,
 	refresh_token text NOT NULL,
-	created_at timestamp DEFAULT current_timestamp NOT NULL,
-	token_expires_at timestamp NOT NULL,
-	refresh_token_expires_at timestamp NOT NULL,
+	created_at timestamptz DEFAULT current_timestamp NOT NULL,
+	token_expires_at timestamptz NOT NULL,
+	refresh_token_expires_at timestamptz NOT NULL,
 	revoked bool DEFAULT false NOT NULL,
-	updated_at timestamp DEFAULT current_timestamp NOT NULL,
+	updated_at timestamptz DEFAULT current_timestamp NOT NULL,
 	CONSTRAINT user_tokens_pkey PRIMARY KEY (id),
 	CONSTRAINT user_tokens_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id)
 );

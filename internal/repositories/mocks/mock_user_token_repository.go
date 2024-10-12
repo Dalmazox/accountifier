@@ -51,6 +51,21 @@ func (mr *MockIUserTokenRepositoryMockRecorder) BeginTx() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BeginTx", reflect.TypeOf((*MockIUserTokenRepository)(nil).BeginTx))
 }
 
+// GetUserTokenByRefreshToken mocks base method.
+func (m *MockIUserTokenRepository) GetUserTokenByRefreshToken(ctx context.Context, refreshToken string, tx repositories.ITx) (*models.UserToken, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserTokenByRefreshToken", ctx, refreshToken, tx)
+	ret0, _ := ret[0].(*models.UserToken)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserTokenByRefreshToken indicates an expected call of GetUserTokenByRefreshToken.
+func (mr *MockIUserTokenRepositoryMockRecorder) GetUserTokenByRefreshToken(ctx, refreshToken, tx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserTokenByRefreshToken", reflect.TypeOf((*MockIUserTokenRepository)(nil).GetUserTokenByRefreshToken), ctx, refreshToken, tx)
+}
+
 // UpsertToken mocks base method.
 func (m *MockIUserTokenRepository) UpsertToken(ctx context.Context, userToken models.UserToken, tx repositories.ITx) error {
 	m.ctrl.T.Helper()

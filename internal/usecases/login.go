@@ -55,12 +55,12 @@ func (useCase *LoginUseCase) Login(ctx context.Context, request *authv1.LoginReq
 		return nil, invalidCredentialsError
 	}
 
-	token, err := utils.GenerateJwt(*user, useCase.config)
+	token, err := utils.GenerateJwt(user.UUID, useCase.config)
 	if err != nil {
 		return nil, errors.New("could not generate token")
 	}
 
-	refreshToken, err := utils.GenerateRefreshToken(*user)
+	refreshToken, err := utils.GenerateRefreshToken(user.UUID)
 	if err != nil {
 		return nil, errors.New("could not generate refresh token")
 	}
