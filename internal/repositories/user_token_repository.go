@@ -9,6 +9,7 @@ import (
 
 type IUserTokenRepository interface {
 	UpsertToken(ctx context.Context, userToken models.UserToken, tx ITx) error
+	GetUserTokenByRefreshToken(ctx context.Context, refreshToken string, tx ITx) (*models.UserToken, error)
 	BeginTx() (ITx, error)
 }
 
@@ -33,6 +34,16 @@ func (repo *UserTokenRepository) UpsertToken(ctx context.Context, userToken mode
 		userToken.RefreshTokenExpiresAt)
 
 	return err
+}
+
+func (repo *UserTokenRepository) GetUserTokenByRefreshToken(ctx context.Context, refreshToken string, tx ITx) (*models.UserToken, error) {
+	query := LoadQuery("get_user_token_by_refresh_token")
+	var userToken models.UserToken
+	if err := tx.GetContext(ctx, &userToken, query, refreshToken); err != nil {
+		return nil, err
+	}
+
+	return &userToken, nil
 }
 
 func (repo *UserTokenRepository) BeginTx() (ITx, error) {

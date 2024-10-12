@@ -23,7 +23,6 @@ func NewUserRepository(db *sqlx.DB) *UserRepository {
 func (repo *UserRepository) GetUserByEmail(ctx context.Context, email string, tx ITx) (*models.User, error) {
 	query := LoadQuery("get_user_by_email")
 	var user models.User
-
 	if err := tx.GetContext(ctx, &user, query, email); err != nil {
 		return nil, err
 	}

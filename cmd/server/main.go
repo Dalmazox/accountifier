@@ -39,7 +39,8 @@ func main() {
 	userRepo := repositories.NewUserRepository(db)
 	userTokenRepo := repositories.NewUserTokenRepository(db)
 	loginUseCase := usecases.NewLoginUseCase(cfg, userRepo, userTokenRepo)
-	authv1.RegisterAuthServiceServer(grpcServer, grpcservices.NewAuthServiceServer(loginUseCase))
+	refreshTokenUseCase := usecases.NewRefreshTokenUseCase(cfg, userTokenRepo)
+	authv1.RegisterAuthServiceServer(grpcServer, grpcservices.NewAuthServiceServer(loginUseCase, refreshTokenUseCase))
 
 	reflection.Register(grpcServer)
 

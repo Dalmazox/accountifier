@@ -10,6 +10,11 @@ mock:
 	mockgen -source=internal/repositories/tx.go -destination=internal/repositories/mocks/mock_tx.go -package=mocks
 .PHONY: mock
 
+coverage:
+	go test -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out
+.PHONY: coverage
+
 migrate-dev-up:
 	migrate -path ./migrations -database $(DB_CONN) up
 .PHONY: migrate-dev-up
